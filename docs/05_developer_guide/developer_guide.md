@@ -4,11 +4,76 @@ The section addresses developers of Tianshou, providing information for
 both casual contributors and maintainers alike.
 
 
+## Python Runtime
+
+Tianshou uses a uv-managed Python 3.11 runtime for all project commands.
+
+**IMPORTANT:** All Python invocations in this project MUST use the repository-local Python wrapper:
+
+```bash
+$PROJECT_DIR/agent_bins/python
+```
+
+Or equivalently:
+
+```bash
+./agent_bins/python
+```
+
+This wrapper automatically resolves and uses the uv-managed Python 3.11 installation, ensuring consistent Python versions across the project.
+
+### Why Use the Wrapper?
+
+The `agent_bins/python` wrapper:
+- Automatically resolves to the correct Python 3.11 version managed by uv
+- Ensures all developers and CI use the same Python runtime
+- Provides a single entrypoint for all Python commands in the project
+- Abstracts away Python version management details
+
+### Usage Examples
+
+```bash
+# Run Python scripts
+$PROJECT_DIR/agent_bins/python script.py
+
+# Run pytest
+$PROJECT_DIR/agent_bins/python -m pytest
+
+# Run mypy for type checking
+$PROJECT_DIR/agent_bins/python -m mypy
+
+# Install packages via pip
+$PROJECT_DIR/agent_bins/python -m pip install <package>
+
+# Check Python version
+$PROJECT_DIR/agent_bins/python --version
+```
+
+### Verification
+
+To verify the Python wrapper is working correctly:
+
+```bash
+./agent_bins/python --version
+```
+
+This should report: `Python 3.11.x`
+
+### Do NOT Use
+
+- `python` (system Python)
+- `python3` (system Python 3)
+- `/usr/bin/python` (any system Python)
+- Any other Python installation path
+
+These will not use the uv-managed Python 3.11 and may cause inconsistencies.
+
+
 ## Python Virtual Environment
 
-Tianshou is built and managed by [poetry](https://python-poetry.org/). 
+Tianshou is built and managed by [poetry](https://python-poetry.org/).
 
-The development environment uses Python 3.11.
+The development environment uses Python 3.11 (via the `agent_bins/python` wrapper).
 
 To install all relevant requirements (as well as Tianshou itself in editable mode)
 you can simply call
@@ -16,11 +81,8 @@ you can simply call
     poetry install --with dev
 
 ```{important}
-Depending on your setup, you may need to create and activate an empty virtual environment
-using the right Python version beforehand. For instance, to do this with conda, use:
-
-    conda create -n tianshou python=3.11
-    conda activate tianshou
+When using poetry commands, ensure you're using the correct Python runtime by setting
+the environment appropriately or relying on the wrapper for any direct Python invocations.
 ```
 
 
