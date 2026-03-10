@@ -17,6 +17,6 @@
       }
     },
     "forwardPorts": [],
-    "postCreateCommand": "poetry install --with dev",
+    "postCreateCommand": "uv sync --dev",
     "remoteUser": "root"
   }

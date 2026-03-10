@@ -71,18 +71,18 @@ These will not use the uv-managed Python 3.11 and may cause inconsistencies.
 
 ## Python Virtual Environment
 
-Tianshou is built and managed by [poetry](https://python-poetry.org/).
+Tianshou is built and managed by [uv](https://github.com/astral-sh/uv).
 
 The development environment uses Python 3.11 (via the `agent_bins/python` wrapper).
 
 To install all relevant requirements (as well as Tianshou itself in editable mode)
 you can simply call
 
-    poetry install --with dev
+    uv sync --dev
 
 ```{important}
-When using poetry commands, ensure you're using the correct Python runtime by setting
-the environment appropriately or relying on the wrapper for any direct Python invocations.
+When using uv commands, ensure you're using the correct Python runtime by setting
+environment appropriately or relying on the wrapper for any direct Python invocations.
 ```
 
 

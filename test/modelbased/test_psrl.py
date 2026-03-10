@@ -47,7 +47,7 @@ def get_args() -> argparse.Namespace:
 
 @pytest.mark.skipif(
     envpool is None,
-    reason="EnvPool is not installed. If on linux, please install it (e.g. as poetry extra)",
+    reason="EnvPool is not installed. If on linux, please install it (e.g. as uv extra)",
 )
 def test_psrl(args: argparse.Namespace = get_args()) -> None:
     training_envs = env = envpool.make_gymnasium(

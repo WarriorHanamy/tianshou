@@ -31,27 +31,22 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.11
-      # use poetry and cache installed packages, see https://github.com/marketplace/actions/python-poetry-action
-      - name: Install poetry
-        uses: abatilo/actions-poetry@v2
-      - name: Setup a local virtual environment (if no poetry.toml file)
-        run: |
-          poetry config virtualenvs.create true --local
-          poetry config virtualenvs.in-project true --local
+      - name: Install uv
+        run: pip install uv
       - uses: actions/cache@v3
         name: Define a cache for the virtual environment based on the dependencies lock file
         with:
           path: ./.venv
-          key: venv-${{ hashFiles('poetry.lock') }}
+          key: venv-${{ hashFiles('uv.lock') }}
       - name: Install the project dependencies
         run: |
-          poetry install --with dev --extras "eval"
+          uv sync --locked --extra eval --dev
       - name: Check formatting
-        run: poetry run poe lint
+        run: uv run poe lint
       - name: Check typing
-        run: poetry run poe type-check
+        run: uv run poe type-check
       - name: Build docs
-        run: MYSTNB_DEBUG=1 poetry run poe doc-build
+        run: MYSTNB_DEBUG=1 uv run poe doc-build
       - name: Show errors (if any)
         if: failure()
         run: find docs/_build/reports -name "*.err.log" -exec echo "--- {} ---" \; -exec cat {} \;

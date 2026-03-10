@@ -17,7 +17,7 @@ on:
 
 
 # This job runs the test suite in two environments:
-# - py_pinned: uses Python 3.11 with the existing poetry.lock file (our stable, pinned dev environment)
+# - py_pinned: uses Python 3.11 with the existing uv.lock file (our stable, pinned dev environment)
 # - py_latest: latest Python version we want to support, without the lock file to furthermore install the newest dependency versions
 #
 # This ensures compatibility with both our controlled dev setup and the latest upstream packages,
@@ -53,49 +53,40 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install poetry
-        uses: abatilo/actions-poetry@v2
-
-      - name: Setup a local virtual environment (if no poetry.toml file)
-        run: |
-          poetry config virtualenvs.create true --local
-          poetry config virtualenvs.in-project true --local
-
-      - name: Remove poetry.lock for latest dependency test
-        if: ${{ !matrix.use_lock }}
-        run: rm -f poetry.lock
+      - name: Install uv
+        run: pip install uv
 
       - name: Define a cache for the virtual environment based on the dependencies lock file
         if: matrix.use_lock
         uses: actions/cache@v3
         with:
           path: ./.venv
-          key: venv-${{ matrix.env_name }}-${{ hashFiles('poetry.lock') }}
+          key: venv-${{ matrix.env_name }}-${{ hashFiles('uv.lock') }}
           restore-keys: |
             venv-${{ matrix.env_name }}-
 
       - name: Install the project dependencies
         run: |
           if [ "${{ matrix.env_name }}" = "py_latest" ]; then
-            poetry install --with dev --extras "eval"
+            uv sync --extra eval --dev
           else
-            poetry install --with dev --extras "envpool eval"
+            uv sync --locked --extra envpool --extra eval --dev
           fi
 
       - name: List installed packages
         run: |
-          poetry run pip list
+          uv pip list
 
       - name: wandb login
         run: |
-          poetry run wandb login e2366d661b89f2bee877c40bee15502d67b7abef
+          .venv/bin/wandb login e2366d661b89f2bee877c40bee15502d67b7abef
 
       - name: Test with pytest
         run: |
           if [ "${{ matrix.env_name }}" = "py_pinned" ]; then
-            poetry run poe test
+            uv run poe test
           else
-            poetry run poe test-nocov
+            uv run poe test-nocov
           fi
       - name: Upload coverage to Codecov
         if: matrix.env_name == 'py_pinned'

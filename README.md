@@ -97,23 +97,28 @@ So taking "Tianshou" means that there is no teacher to learn from, but rather to
 
 Tianshou is currently hosted on [PyPI](https://pypi.org/project/tianshou/) and [conda-forge](https://github.com/conda-forge/tianshou-feedstock). It requires Python >= 3.11.
 
-For installing the most recent version of Tianshou, the best way is clone the repository and install it with [poetry](https://python-poetry.org/)
+For installing the most recent version of Tianshou, the best way is clone the repository and install it with [uv](https://github.com/astral-sh/uv)
 (which you need to install on your system first)
 
 ```bash
 git clone git@github.com:thu-ml/tianshou.git
 cd tianshou
-poetry install
+uv sync
 ```
 
-You can also install the dev requirements by adding `--with dev` or the extras
-for say mujoco and acceleration by [envpool](https://github.com/sail-sg/envpool)
-by adding `--extras "mujoco envpool"`
+To install the development dependencies, use:
 
-If you wish to install multiple extras, ensure that you include them in a single command. Sequential calls to `poetry install --extras xxx` will overwrite prior installations, leaving only the last specified extras installed.
-Or you may install all the following extras by adding `--all-extras`.
+```bash
+uv sync --dev
+```
 
-Available extras are:
+You can also install optional extras for specific features. For example, to install the MuJoCo environments and acceleration by [envpool](https://github.com/sail-sg/envpool):
+
+```bash
+uv sync --extra mujoco --extra envpool
+```
+
+To install multiple extras, you can use multiple `--extra` flags. Available extras are:
 
 - `atari` (for Atari environments)
 - `box2d` (for Box2D environments)
@@ -145,7 +150,7 @@ If you are using Anaconda or Miniconda, you can install Tianshou from conda-forg
 $ conda install tianshou -c conda-forge
 ```
 
-Alternatively to the poetry install, you can also install the latest source version through GitHub:
+Alternatively to the uv sync, you can also install the latest source version through GitHub:
 
 ```bash
 $ pip install git+https://github.com/thu-ml/tianshou.git@master --upgrade
@@ -325,7 +330,7 @@ Here's a run (with the training time cut short):
 Find many further applications of the high-level API in the `examples/` folder;
 look for scripts ending with `_hl.py`.
 Note that most of these examples require the extra `argparse`
-(install it by adding `--extras argparse` when invoking poetry).
+(install it by adding `--extra argparse` when invoking uv sync).
 
 ### Procedural API
 

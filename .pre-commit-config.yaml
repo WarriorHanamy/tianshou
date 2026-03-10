@@ -10,43 +10,36 @@ repos:
     hooks:
       - id: ruff
         name: ruff
-        entry: poetry run ruff
+        entry: uv run ruff
         require_serial: true
         language: system
         types: [python]
       - id: ruff-nb
         name: ruff-nb
-        entry: poetry run nbqa ruff .
+        entry: uv run nbqa ruff .
         require_serial: true
         language: system
         pass_filenames: false
         types: [python]
       - id: black
         name: black
-        entry: poetry run black
+        entry: uv run black
         require_serial: true
         language: system
         types: [python]
-      - id: poetry-check
-        name: poetry check
-        entry: poetry check
-        language: system
-        files: pyproject.toml
-        pass_filenames: false
-      - id: poetry-lock-check
-        name: poetry lock check
-        entry: poetry check
-        args: [--lock]
+      - id: uv-lock-check
+        name: uv lock check
+        entry: uv lock --check
         language: system
         pass_filenames: false
       - id: mypy
         name: mypy
-        entry: poetry run mypy tianshou examples test
+        entry: uv run mypy tianshou examples test
         # filenames should not be passed as they would collide with the config in pyproject.toml
         pass_filenames: false
         files: '^tianshou(/[^/]*)*/[^/]*\.py$'
         language: system
       - id: mypy-nb
         name: mypy-nb
-        entry: poetry run nbqa mypy
+        entry: uv run nbqa mypy
         language: system
