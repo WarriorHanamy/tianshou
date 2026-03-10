@@ -8,13 +8,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v1
+      - uses: actions/checkout@v4
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
         with:
-          python-version: 3.11
-      - name: Install build and uv
-        run: pip install build uv
+          python-version: "3.11"
       - name: Build and publish
         env:
           TWINE_USERNAME: __token__
