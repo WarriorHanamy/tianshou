@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v uv >/dev/null 2>&1; then
+  printf 'uv is required but not installed\n' >&2
+  exit 1
+fi
+
+exec "$(uv python find 3.11)" "$@"
